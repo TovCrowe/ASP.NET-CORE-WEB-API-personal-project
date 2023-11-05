@@ -52,7 +52,7 @@ public partial class VerceldbContext : DbContext
                 .HasColumnName("title");
             entity.Property(e => e.UserId).HasColumnName("user_id");
 
-            entity.HasOne(d => d.oUser).WithMany(p => p.Tasks)
+            entity.HasOne(d => d.oUser).WithMany(p => p.oTasks)
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("tasks_user_id_fkey");
         });

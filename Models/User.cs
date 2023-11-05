@@ -13,5 +13,5 @@ public partial class User
 
     public string? Password { get; set; }
 
-    public virtual ICollection<Task> Tasks { get; set; } = new List<Task>();
+    public virtual ICollection<Task> oTasks { get; set; } = new List<Task>();
 }
