@@ -3,9 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using WebApplication7.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.AspNetCore.Cors;
 
 namespace WebApplication7.Controllers
 {
+    [EnableCors("myRules")]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -67,5 +70,101 @@ namespace WebApplication7.Controllers
 
 
         }
+
+        [HttpPost]
+        [Route("Add")]
+        public IActionResult Add([FromBody] User user)
+        {
+
+            //encontrar al users que le ofrecimos aqui
+
+
+            try
+            {
+                _dbcontext.Users.Add(user);
+                _dbcontext.SaveChanges();
+                return StatusCode(StatusCodes.Status200OK, new { message = "User succefully saved"});
+
+
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status422UnprocessableEntity, ex);
+
+
+            }
+
+
+        }
+
+        [HttpPut]
+        [Route("Edit")]
+        public IActionResult Edit([FromBody] User user)
+        {
+
+            User oUser = _dbcontext.Users.Find(user.UserId);
+
+            if(oUser == null)
+            {
+                return BadRequest("User not found");
+            }
+
+
+            try
+            {
+                oUser.Name = user.Name is null ? oUser.Name : user.Name;
+                oUser.Email = user.Email is null ? oUser.Email : user.Email;
+                oUser.Password = user.Password is null? oUser.Password : user.Password;
+                _dbcontext.Users.Update(oUser);
+                _dbcontext.SaveChanges();
+                
+                   
+                return StatusCode(StatusCodes.Status200OK, new { message = "User succefully saved" });
+
+
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status422UnprocessableEntity, ex);
+
+
+            }
+
+
+        }
+
+        [HttpDelete]
+        [Route("Delete")]
+
+        public IActionResult Delete(User user)
+        {
+            User oUser = _dbcontext.Users.Find(user.UserId);
+
+            if (oUser == null)
+            {
+                return BadRequest("User not found");
+            }
+
+
+            try
+            {
+                _dbcontext.Users.Remove(oUser);
+                _dbcontext.SaveChanges();
+                return StatusCode(StatusCodes.Status200OK, new { message = "User succefully saved" });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status422UnprocessableEntity, ex);
+
+
+            }
+        }
+
+
+
+
     }
 }
