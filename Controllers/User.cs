@@ -20,7 +20,7 @@ namespace WebApplication7.Controllers
             _dbcontext = _context;
         }
 
-   
+
 
         [HttpGet]
         [Route("UserList")]
@@ -81,7 +81,7 @@ namespace WebApplication7.Controllers
             {
                 _dbcontext.Users.Add(user);
                 _dbcontext.SaveChanges();
-                return StatusCode(StatusCodes.Status200OK, new { message = "User succefully saved"});
+                return StatusCode(StatusCodes.Status200OK, new { message = "User succefully saved" });
 
 
 
@@ -103,7 +103,7 @@ namespace WebApplication7.Controllers
 
             User oUser = _dbcontext.Users.Find(user.UserId);
 
-            if(oUser == null)
+            if (oUser == null)
             {
                 return BadRequest("User not found");
             }
@@ -113,11 +113,11 @@ namespace WebApplication7.Controllers
             {
                 oUser.Name = user.Name is null ? oUser.Name : user.Name;
                 oUser.Email = user.Email is null ? oUser.Email : user.Email;
-                oUser.Password = user.Password is null? oUser.Password : user.Password;
+                oUser.Password = user.Password is null ? oUser.Password : user.Password;
                 _dbcontext.Users.Update(oUser);
                 _dbcontext.SaveChanges();
-                
-                   
+
+
                 return StatusCode(StatusCodes.Status200OK, new { message = "User succefully saved" });
 
 

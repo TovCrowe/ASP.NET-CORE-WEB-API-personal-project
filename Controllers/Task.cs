@@ -29,7 +29,7 @@ namespace WebApplication7.Controllers2
         {
             try
             {
-                List<Models.Task> list = await _dbcontext.Tasks.ToListAsync();
+                List<Models.Task> list = await _dbcontext.Tasks.Include(o => o.oComments).ToListAsync();
                 return StatusCode(StatusCodes.Status200OK, new { message = "ok", response = list });
             }
             catch (Exception ex)
@@ -42,7 +42,7 @@ namespace WebApplication7.Controllers2
 
         public async Task<IActionResult> Get(int taskId)
         {
-             Models.Task otask = await _dbcontext.Tasks.FindAsync(taskId);
+            Models.Task otask = await _dbcontext.Tasks.FindAsync(taskId);
 
             if (otask == null)
             {
@@ -80,13 +80,13 @@ namespace WebApplication7.Controllers2
 
         }
 
-      [HttpPut]
-      [Route("Edit")]
-      public async Task<IActionResult> Edit([FromBody] Models.Task task)
-      {
-          Models.Task oTask = await _dbcontext.Tasks.FirstOrDefaultAsync(t => t.TaskId == task.TaskId);//recupera la tarea existente de la based de datos por su id
+        [HttpPut]
+        [Route("Edit")]
+        public async Task<IActionResult> Edit([FromBody] Models.Task task)
+        {
+            Models.Task oTask = await _dbcontext.Tasks.FirstOrDefaultAsync(t => t.TaskId == task.TaskId);//recupera la tarea existente de la based de datos por su id
 
-            if(oTask == null)
+            if (oTask == null)
             {
                 return BadRequest("Ïnvalid users");
             }
@@ -110,7 +110,7 @@ namespace WebApplication7.Controllers2
             }
 
 
-      }
+        }
         [HttpDelete]
         [Route("Edit")]
 

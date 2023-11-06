@@ -21,5 +21,7 @@ public partial class Task
 
     public int? UserId { get; set; }
 
+    public virtual ICollection<Comment> oComments { get; set; } = new List<Comment>();
+
     public virtual User? oUser { get; set; }
 }
