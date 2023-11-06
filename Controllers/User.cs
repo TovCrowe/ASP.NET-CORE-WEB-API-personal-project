@@ -20,34 +20,32 @@ namespace WebApplication7.Controllers
             _dbcontext = _context;
         }
 
+   
+
         [HttpGet]
         [Route("UserList")]
-
-        public IActionResult List()
+        public async Task<IActionResult> List()
         {
             List<User> list = new List<User>();
 
-
             try
             {
-                list = _dbcontext.Users.Include(c => c.oTasks).ToList();//enlista todos los usuarios con todas las task que tenga
+                list = await _dbcontext.Users.Include(c => c.oTasks).ToListAsync(); // Asumiendo que ToListAsync() está disponible
                 return StatusCode(StatusCodes.Status200OK, new { message = "ok", response = list });
             }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status422UnprocessableEntity, ex);
-
-
             }
-
         }
+
 
         [HttpGet]
         [Route("Get/{idUser:int}")]
         public IActionResult Get(int idUser)
         {
 
-            User oUser = _dbcontext.Users.Find(idUser);
+            User oUser = _dbcontext.Users.Find();
             //encontrar al users que le ofrecimos aqui
 
 
