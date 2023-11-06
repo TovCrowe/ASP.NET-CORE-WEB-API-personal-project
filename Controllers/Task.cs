@@ -25,7 +25,7 @@ namespace WebApplication7.Controllers2
         [HttpGet]
         [Route("TaskList")]
 
-        public async Task<IActionResult> List()
+        public async Task<IActionResult> ListTask()
         {
             try
             {
@@ -40,7 +40,7 @@ namespace WebApplication7.Controllers2
         [HttpGet]
         [Route("Get/{taskid:int}")]
 
-        public async Task<IActionResult> Get(int taskId)
+        public async Task<IActionResult> GetTaskByid(int taskId)
         {
             Models.Task otask = await _dbcontext.Tasks.FindAsync(taskId);
 
@@ -63,7 +63,7 @@ namespace WebApplication7.Controllers2
         [HttpPost]
         [Route("Add")]
 
-        public async Task<IActionResult> Add([FromBody] Models.Task task)
+        public async Task<IActionResult> AddTask([FromBody] Models.Task task)
         {
 
             try
@@ -82,7 +82,7 @@ namespace WebApplication7.Controllers2
 
         [HttpPut]
         [Route("Edit")]
-        public async Task<IActionResult> Edit([FromBody] Models.Task task)
+        public async Task<IActionResult> EditTask([FromBody] Models.Task task)
         {
             Models.Task oTask = await _dbcontext.Tasks.FirstOrDefaultAsync(t => t.TaskId == task.TaskId);//recupera la tarea existente de la based de datos por su id
 
@@ -93,12 +93,12 @@ namespace WebApplication7.Controllers2
 
             try
             {
-                oTask.DueDate = oTask.DueDate is null ? task.DueDate : oTask.DueDate;
-                oTask.Status = oTask.Status is null ? task.Status : oTask.Status;
-                oTask.Description = oTask.Description is null ? task.Description : oTask.Description;
-                oTask.CreatedAt = oTask.CreatedAt is null ? task.CreatedAt : oTask.CreatedAt;
-                oTask.Priority = oTask.Priority is null ? task.Priority : oTask.Priority;
-                oTask.Title = oTask.Title is null ? task.Title : oTask.Priority;
+                oTask.DueDate = task.DueDate is null ? oTask.DueDate : task.DueDate;
+                oTask.Status = task.Status is null ? oTask.Status : task.Status;
+                oTask.Description = task.Description is null ? oTask.Description : task.Description;
+                oTask.CreatedAt = task.CreatedAt is null ? oTask.CreatedAt : task.CreatedAt;
+                oTask.Priority = task.Priority is null ? oTask.Priority : task.Priority;
+                oTask.Title = task.Title is null ? oTask.Title : oTask.Priority;
 
                 _dbcontext.Tasks.Update(oTask);
                 await _dbcontext.SaveChangesAsync();
@@ -114,7 +114,7 @@ namespace WebApplication7.Controllers2
         [HttpDelete]
         [Route("Edit")]
 
-        public async Task<IActionResult> Delete(Models.Task task)
+        public async Task<IActionResult> DeleteTask(Models.Task task)
         {
             Models.Task oTask = _dbcontext.Tasks.Find(task.TaskId);
 

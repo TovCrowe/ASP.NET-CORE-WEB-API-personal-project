@@ -28,7 +28,7 @@ namespace WebApplication7.Controllers
         [HttpGet]
         [Route("GetProjects")]
 
-        public async Task<IActionResult> List()
+        public async Task<IActionResult> ListProjects()
         {
 
             try
@@ -46,7 +46,7 @@ namespace WebApplication7.Controllers
         [HttpGet]
         [Route("Get/{projectId:int}")]
 
-        public async Task<IActionResult> GetById(int projectId)
+        public async Task<IActionResult> GetProjectById(int projectId)
         {
             Project oProjects = await _dbcontext.Projects.FindAsync(projectId);
 
@@ -71,7 +71,7 @@ namespace WebApplication7.Controllers
         [HttpPost]
         [Route("Add")]
 
-        public async Task<IActionResult> Add([FromBody] Project project)
+        public async Task<IActionResult> AddProject([FromBody] Project project)
         {
             try
             {
@@ -88,7 +88,7 @@ namespace WebApplication7.Controllers
         [HttpPut]
         [Route("Edit")]
 
-        public async Task<IActionResult> Edit([FromBody] Project project)
+        public async Task<IActionResult> EditProject([FromBody] Project project)
         {
             Project oProject = await _dbcontext.Projects.FirstOrDefaultAsync(t => t.ProjectId == project.ProjectId);//recupera la tarea existente de la based de datos por su id
 
@@ -99,8 +99,8 @@ namespace WebApplication7.Controllers
 
             try
             {
-                oProject.NameProject = oProject.NameProject is null ? project.NameProject : oProject.NameProject;
-                oProject.Description = oProject.Description is null ? project.Description : oProject.Description;
+                oProject.NameProject = project.NameProject is null ? oProject.NameProject : project.NameProject;
+                oProject.Description = project.Description is null ? oProject.Description : project.Description;
 
                 _dbcontext.Projects.Update(oProject);
                 await _dbcontext.SaveChangesAsync();
@@ -114,9 +114,9 @@ namespace WebApplication7.Controllers
         [HttpDelete]
         [Route("Delte")]
 
-        public async Task<IActionResult> Delete(int projectId)
+        public async Task<IActionResult> DeleteProject(Project project)
         {
-            Project oProject = await _dbcontext.Projects.FindAsync(projectId);
+            Project oProject = await _dbcontext.Projects.FindAsync(project.ProjectId);
 
             if (oProject == null)
             {

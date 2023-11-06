@@ -24,7 +24,7 @@ namespace WebApplication7.Controllers
 
         [HttpGet]
         [Route("UserList")]
-        public async Task<IActionResult> List()
+        public async Task<IActionResult> ListUser()
         {
             List<User> list = new List<User>();
 
@@ -42,7 +42,7 @@ namespace WebApplication7.Controllers
 
         [HttpGet]
         [Route("Get/{idUser:int}")]
-        public IActionResult Get(int idUser)
+        public IActionResult GetUser(int idUser)
         {
 
             User oUser = _dbcontext.Users.Find();
@@ -71,7 +71,7 @@ namespace WebApplication7.Controllers
 
         [HttpPost]
         [Route("Add")]
-        public IActionResult Add([FromBody] User user)
+        public IActionResult AddUser([FromBody] User user)
         {
 
             //encontrar al users que le ofrecimos aqui
@@ -98,7 +98,7 @@ namespace WebApplication7.Controllers
 
         [HttpPut]
         [Route("Edit")]
-        public IActionResult Edit([FromBody] User user)
+        public IActionResult EditUser([FromBody] User user)
         {
 
             User oUser = _dbcontext.Users.Find(user.UserId);
@@ -136,7 +136,7 @@ namespace WebApplication7.Controllers
         [HttpDelete]
         [Route("Delete")]
 
-        public IActionResult Delete(User user)
+        public IActionResult DeleteUser(User user)
         {
             User oUser = _dbcontext.Users.Find(user.UserId);
 
