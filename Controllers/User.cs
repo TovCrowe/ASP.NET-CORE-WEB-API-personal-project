@@ -5,10 +5,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.Cors;
+using WebApplication7.Resources;
+
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 
 namespace WebApplication7.Controllers
 {
-    [EnableCors("myRules")]
+    [EnableCors("RulesCors")]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -22,6 +26,11 @@ namespace WebApplication7.Controllers
 
 
 
+
+
+       
+
+
         [HttpGet]
         [Route("UserList")]
         public async Task<IActionResult> ListUser()
@@ -30,7 +39,8 @@ namespace WebApplication7.Controllers
 
             try
             {
-                list = await _dbcontext.Users.Include(c => c.oTasks).ToListAsync(); // Asumiendo que ToListAsync() está disponible
+
+                list = await _dbcontext.Users.ToListAsync(); // Asumiendo que ToListAsync() está disponible
                 return StatusCode(StatusCodes.Status200OK, new { message = "ok", response = list });
             }
             catch (Exception ex)
@@ -39,61 +49,30 @@ namespace WebApplication7.Controllers
             }
         }
 
-
-        [HttpGet]
-        [Route("Get/{idUser:int}")]
-        public IActionResult GetUser(int idUser)
-        {
-
-            User oUser = _dbcontext.Users.Find();
-            //encontrar al users que le ofrecimos aqui
-
-
-            if (oUser == null)
-            {
-                return BadRequest("User not found");//envia un error si no encuentra al usuario
-            }
-            try
-            {
-                oUser = _dbcontext.Users.Include(c => c.oTasks).Where(p => p.UserId == idUser).FirstOrDefault();
-
-                return StatusCode(StatusCodes.Status200OK, new { message = "ok", response = oUser });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status422UnprocessableEntity, ex);
-
-
-            }
-
-
-        }
-
         [HttpPost]
         [Route("Add")]
-        public IActionResult AddUser([FromBody] User user)
+        public async Task<IActionResult> AddUser([FromBody] User user)
         {
 
-            //encontrar al users que le ofrecimos aqui
+            var existingUser = await _dbcontext.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
+            if (existingUser != null)
+            {
+                return BadRequest("User already exists.");
+            }
 
+            user.Password = Utilities.EncryptKey(user.Password);
 
             try
             {
                 _dbcontext.Users.Add(user);
-                _dbcontext.SaveChanges();
-                return StatusCode(StatusCodes.Status200OK, new { message = "User succefully saved" });
-
-
-
+                await _dbcontext.SaveChangesAsync();
+                return StatusCode(StatusCodes.Status201Created, new { message = "User successfully saved" });
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status422UnprocessableEntity, ex);
 
-
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while saving the user" });
             }
-
-
         }
 
         [HttpPut]

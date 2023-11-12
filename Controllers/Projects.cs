@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace WebApplication7.Controllers
 {
-    [EnableCors("myRules")]
+    [EnableCors("RulesCors")]
     [Route("api/[controller]")]
     [ApiController]
     public class ProjectsController : Controller
