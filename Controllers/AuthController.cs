@@ -1,13 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using WebApplication7.Models;
+using WebApplication7.Resources;
 
 namespace WebApplication7.Controllers
 {
+    [EnableCors("RulesCors")]
+
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
@@ -26,11 +30,17 @@ namespace WebApplication7.Controllers
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] User user)
         {
-            User oUser = await _dbcontext.Users.FirstOrDefaultAsync(u => u.Name == user.Name && u.Password == user.Password);
+            User oUser = await _dbcontext.Users
+                .FirstOrDefaultAsync(u => u.Name == user.Name);
+
             if (oUser != null)
             {
-                var token = GenerateJwtToken(oUser);
-                return Ok(new { token = token });
+                string hashPassword = Utilities.EncryptKey(user.Password);
+                if (hashPassword == oUser.Password)
+                {
+                    var token = GenerateJwtToken(oUser);
+                    return Ok(new { token = token });
+                }
             }
 
             return Unauthorized("Credenciales inválidas.");

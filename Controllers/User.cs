@@ -25,30 +25,6 @@ namespace WebApplication7.Controllers
         }
 
 
-
-
-
-       
-
-
-        [HttpGet]
-        [Route("UserList")]
-        public async Task<IActionResult> ListUser()
-        {
-            List<User> list = new List<User>();
-
-            try
-            {
-
-                list = await _dbcontext.Users.ToListAsync(); // Asumiendo que ToListAsync() está disponible
-                return StatusCode(StatusCodes.Status200OK, new { message = "ok", response = list });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status422UnprocessableEntity, ex);
-            }
-        }
-
         [HttpPost]
         [Route("Add")]
         public async Task<IActionResult> AddUser([FromBody] User user)
@@ -72,6 +48,25 @@ namespace WebApplication7.Controllers
             {
 
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while saving the user" });
+            }
+        }
+
+
+        [HttpGet]
+        [Route("UserList")]
+        public async Task<IActionResult> ListUser()
+        {
+            List<User> list = new List<User>();
+
+            try
+            {
+
+                list = await _dbcontext.Users.ToListAsync(); // Asumiendo que ToListAsync() está disponible
+                return StatusCode(StatusCodes.Status200OK, new { message = "ok", response = list });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status422UnprocessableEntity, ex);
             }
         }
 
