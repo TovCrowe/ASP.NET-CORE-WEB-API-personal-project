@@ -30,7 +30,7 @@ namespace WebApplication7.Controllers
         public async Task<IActionResult> AddUser([FromBody] User user)
         {
 
-            var existingUser = await _dbcontext.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
+            var existingUser = await _dbcontext.Users.FromSqlRaw("SELECT Email FROM USERS WHERE Email LIKE {0}", user.Email).FirstOrDefaultAsync();
             if (existingUser != null)
             {
                 return BadRequest("User already exists.");
@@ -61,7 +61,7 @@ namespace WebApplication7.Controllers
             try
             {
 
-                list = await _dbcontext.Users.ToListAsync(); // Asumiendo que ToListAsync() está disponible
+                list = await _dbcontext.Users.FromSqlRaw("SELECT * FROM USERS").ToListAsync(); // Asumiendo que ToListAsync() está disponible
                 return StatusCode(StatusCodes.Status200OK, new { message = "ok", response = list });
             }
             catch (Exception ex)

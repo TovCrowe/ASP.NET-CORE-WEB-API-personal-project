@@ -60,7 +60,7 @@ namespace WebApplication7.Controllers
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddHours(1),
+                expires: DateTime.Now.AddMinutes(1),
                 signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
